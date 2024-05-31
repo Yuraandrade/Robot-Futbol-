@@ -1,0 +1,53 @@
+  if (leftMotorSpeed < 0)
+  {
+    digitalWrite(leftMotorPin1,HIGH);
+    digitalWrite(leftMotorPin2,LOW);    
+  }
+  else if (leftMotorSpeed > 0)
+  {
+    digitalWrite(leftMotorPin1,LOW);
+    digitalWrite(leftMotorPin2,HIGH);      
+  }
+  else
+  {
+    digitalWrite(leftMotorPin1,LOW);
+    digitalWrite(leftMotorPin2,LOW);      
+  } 
+  ledcWrite(rightMotorPWMSpeedChannel, abs(rightMotorSpeed));
+  ledcWrite(leftMotorPWMSpeedChannel, abs(leftMotorSpeed));   
+}
+
+void setUpPinModes()
+{
+  pinMode(enableRightMotor,OUTPUT);
+  pinMode(rightMotorPin1,OUTPUT);
+  pinMode(rightMotorPin2,OUTPUT);
+  
+  pinMode(enableLeftMotor,OUTPUT);
+  pinMode(leftMotorPin1,OUTPUT);
+  pinMode(leftMotorPin2,OUTPUT);
+
+  //Set up PWM for motor speed
+  ledcSetup(rightMotorPWMSpeedChannel, PWMFreq, PWMResolution);
+  ledcSetup(leftMotorPWMSpeedChannel, PWMFreq, PWMResolution);  
+  ledcAttachPin(enableRightMotor, rightMotorPWMSpeedChannel);
+  ledcAttachPin(enableLeftMotor, leftMotorPWMSpeedChannel);  
+  
+  rotateMotor(0, 0);
+}
+
+
+void setup()
+{
+  setUpPinModes();
+  Serial.begin(115200);
+  PS4.attach(notify);
+  PS4.attachOnConnect(onConnect);
+  PS4.attachOnDisconnect(onDisConnect);
+  PS4.begin();
+  Serial.println("Ready.");
+}
+
+void loop()
+{
+}
